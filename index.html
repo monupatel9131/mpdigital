@@ -1,22 +1,398 @@
-<html>
-    <head>
-    <title> The Age Calculator</title>
-    </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Internet Speed Test – Check Download, Upload & Ping | MP Speed Test</title>
+  <meta name="description" content="Test your internet connection with MP Speed Test. Check download speed, upload speed and ping quickly and easily on mobile or desktop.">
+  <link rel="canonical" href="https://mpspeedtest.online/">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Internet Speed Test – MP Speed Test">
+  <meta property="og:description" content="Check your internet download speed, upload speed and ping with real browser measurements.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mpspeedtest.online/">
+  <meta property="og:image" content="https://mpspeedtest.online/favicon.svg">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MP Speed Test">
+  <meta name="twitter:description" content="Fast, browser-based internet speed testing by MP Digital Hub.">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Structured Data JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "MP Speed Test",
+    "url": "https://mpspeedtest.online/",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "All",
+    "author": {
+      "@type": "Organization",
+      "name": "MP Digital Hub"
+    },
+    "description": "Browser-based speed test utility providing accurate latency, download, and upload bandwidth measurements."
+  }
+  </script>
+</head>
 <body>
-    <script language="JavaScript">
-function CalculateAge()
-{
-var birthyear = document.form1.txt.value;
-var currentyear  = new Date();
-var age   = currentyear.getFullYear();
-document.write('They are either ' + (age-birthyear)+ ' or ' + (age-birthyear - 1));
- }
-    </script>
-        <form name=form1>
-            Enter the Birth Year
-           <input type="text" name="txt" size=10>
-           <br>
-           <input type="button" value="Calculate" onClick='CalculateAge();'>  
-        </form> 
+
+  <!-- Screen Reader Live Status -->
+  <div id="sr-status" class="sr-only" aria-live="polite"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container nav-container">
+      <a href="index.html" class="brand-logo">
+        <img src="favicon.svg" alt="MP Speed Test Logo" class="logo-icon">
+        <div>
+          <div class="brand-title">MP Speed Test</div>
+          <div class="brand-subtitle">by MP Digital Hub</div>
+        </div>
+      </a>
+
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="index.html" class="nav-link active">Home</a></li>
+        <li><a href="#speed-test" class="nav-link">Speed Test</a></li>
+        <li><a href="about.html" class="nav-link">How It Works</a></li>
+        <li><a href="#speed-guide" class="nav-link">Speed Guide</a></li>
+        <li><a href="faq.html" class="nav-link">FAQ</a></li>
+        <li><a href="contact.html" class="nav-link">Contact</a></li>
+      </ul>
+
+      <div class="nav-controls">
+        <button class="theme-toggle" id="theme-toggle-btn" aria-label="Toggle Light/Dark Theme">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
+        </button>
+        <button class="mobile-toggle" id="mobile-menu-btn" aria-expanded="false" aria-label="Toggle Menu">
+          <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    
+    <!-- Top Ad Placeholder -->
+    <div class="ad-container" aria-label="Advertisement">ADVERTISEMENT</div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1 class="hero-title">MP Speed Test</h1>
+      <p class="hero-subtitle">Check your Internet Speed</p>
+      <p class="hero-desc">Test your Download, Upload and Ping in seconds using real browser network measurements.</p>
+
+      <div class="trust-badges">
+        <span class="trust-badge">✓ No registration required</span>
+        <span class="trust-badge">✓ Browser based</span>
+        <span class="trust-badge">✓ Local history</span>
+        <span class="trust-badge">✓ Mobile friendly</span>
+      </div>
+    </section>
+
+    <!-- Speedometer Engine Area -->
+    <section id="speed-test" class="test-section">
+      <div id="error-alert" class="alert-error" style="display: none;"></div>
+
+      <div class="gauge-wrapper">
+        <svg class="gauge-svg" viewBox="0 0 200 200">
+          <circle class="gauge-bg-path" cx="100" cy="100" r="90" />
+          <circle class="gauge-fill-path" id="gauge-fill" cx="100" cy="100" r="90" />
+        </svg>
+        <div class="gauge-center">
+          <div class="gauge-phase" id="gauge-phase">READY</div>
+          <div class="gauge-value" id="gauge-value">—</div>
+          <div class="gauge-unit" id="gauge-unit">Mbps</div>
+          <div class="gauge-status" id="gauge-status">Click Start to Begin</div>
+        </div>
+      </div>
+
+      <p class="data-warning">Speed tests transfer real network data and may use a significant amount of your internet data package.</p>
+
+      <button id="start-test-btn" class="btn btn-primary btn-lg" onclick="handleTestClick()">START TEST</button>
+
+      <!-- Live Metrics Breakdown -->
+      <div class="metrics-grid" style="width: 100%; max-width: 800px;">
+        <div class="card metric-card">
+          <span class="metric-title">Ping / Latency</span>
+          <div class="metric-value-group">
+            <span class="metric-value" id="live-ping">—</span>
+            <span class="metric-unit">ms</span>
+          </div>
+        </div>
+        <div class="card metric-card">
+          <span class="metric-title">Download Speed</span>
+          <div class="metric-value-group">
+            <span class="metric-value" id="live-download">—</span>
+            <span class="metric-unit">Mbps</span>
+          </div>
+        </div>
+        <div class="card metric-card">
+          <span class="metric-title">Upload Speed</span>
+          <div class="metric-value-group">
+            <span class="metric-value" id="live-upload">—</span>
+            <span class="metric-unit">Mbps</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Result Dashboard -->
+    <section id="result-dashboard" class="result-dashboard" style="display: none;">
+      <h2 style="text-align: center; margin-bottom: 0.5rem;">Test Results Summary</h2>
+      <div style="text-align: center;">
+        <span id="res-rating" class="rating-badge rating-good">Good</span>
+        <p id="res-rating-text" style="color: var(--text-muted); font-size: 0.95rem;"></p>
+      </div>
+
+      <div class="metrics-grid" style="margin-top: 1.5rem;">
+        <div class="card">
+          <span class="metric-title">Download</span>
+          <div id="res-download" class="metric-value">—</div>
+        </div>
+        <div class="card">
+          <span class="metric-title">Upload</span>
+          <div id="res-upload" class="metric-value">—</div>
+        </div>
+        <div class="card">
+          <span class="metric-title">Average Ping</span>
+          <div id="res-ping" class="metric-value">—</div>
+        </div>
+        <div class="card">
+          <span class="metric-title">Min Ping</span>
+          <div id="res-ping-min" class="metric-value">—</div>
+        </div>
+        <div class="card">
+          <span class="metric-title">Max Ping</span>
+          <div id="res-ping-max" class="metric-value">—</div>
+        </div>
+        <div class="card">
+          <span class="metric-title">Test Duration</span>
+          <div id="res-duration" class="metric-value">—</div>
+        </div>
+      </div>
+
+      <div class="result-actions">
+        <button id="share-result-btn" class="btn btn-primary" onclick="shareResult()">Share Result</button>
+        <button id="copy-result-btn" class="btn btn-secondary" onclick="copyResult()">Copy Result</button>
+      </div>
+    </section>
+
+    <!-- Mid Ad Placeholder -->
+    <div class="ad-container" aria-label="Advertisement">ADVERTISEMENT</div>
+
+    <!-- Browser Network & IP Estimates Section -->
+    <section class="section">
+      <h2 class="section-title">Network Diagnostics</h2>
+      <div class="metrics-grid">
+        <div class="card" id="network-info-card">
+          <span class="metric-title">Network Info (Browser Estimate)</span>
+          <div style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">
+            <p>Connection Type: <strong id="net-type" style="color: var(--text);">—</strong></p>
+            <p>Estimated RTT: <strong id="net-rtt" style="color: var(--text);">—</strong></p>
+            <p>Estimated Downlink: <strong id="net-downlink" style="color: var(--text);">—</strong></p>
+            <p>Data Saver: <strong id="net-savedata" style="color: var(--text);">—</strong></p>
+          </div>
+        </div>
+        <div class="card">
+          <span class="metric-title">Public IP Information</span>
+          <div style="font-size: 1.1rem; font-weight: 700; margin-top: 0.5rem;" id="public-ip-display">
+            Loading IP...
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">IP details are fetched client-side and never stored on any server.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- History Section -->
+    <section class="section">
+      <h2 class="section-title">Recent Tests</h2>
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Date & Time</th>
+              <th>Ping</th>
+              <th>Download</th>
+              <th>Upload</th>
+            </tr>
+          </thead>
+          <tbody id="history-table-body">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+      <div style="text-align: right;">
+        <button id="clear-history-btn" class="btn btn-secondary" onclick="clearHistory()">Clear History</button>
+      </div>
+    </section>
+
+    <!-- Educational Information Sections -->
+    <section class="section">
+      <h2 class="section-title">What Is Internet Speed?</h2>
+      <div class="info-grid">
+        <div class="card info-card">
+          <h3>Download Speed</h3>
+          <p>How quickly data comes from the internet to your device. Essential for streaming video, loading web pages, and downloading files.</p>
+        </div>
+        <div class="card info-card">
+          <h3>Upload Speed</h3>
+          <p>How quickly data is sent from your device to the internet. Important for video calling, online gaming, and sending files.</p>
+        </div>
+        <div class="card info-card">
+          <h3>Ping / Latency</h3>
+          <p>The approximate round-trip latency between your device/browser and the test endpoint. Lower ping means a more responsive connection.</p>
+        </div>
+        <div class="card info-card">
+          <h3>Mbps vs MB/s</h3>
+          <p>Megabits per second (Mbps) measures network bandwidth speed. Megabytes per second (MB/s) measures file size transfer rate. Note: 8 bits = 1 byte.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="section">
+      <h2 class="section-title">How Does MP Speed Test Work?</h2>
+      <div class="steps-grid">
+        <div class="card step-card">
+          <div class="step-number">01</div>
+          <h3>Ping</h3>
+          <p>Measure latency with lightweight HTTP requests.</p>
+        </div>
+        <div class="card step-card">
+          <div class="step-number">02</div>
+          <h3>Download</h3>
+          <p>Receive actual binary data chunks and measure raw throughput.</p>
+        </div>
+        <div class="card step-card">
+          <div class="step-number">03</div>
+          <h3>Upload</h3>
+          <p>Send generated binary data to test post capability and upload rate.</p>
+        </div>
+        <div class="card step-card">
+          <div class="step-number">04</div>
+          <h3>Calculate</h3>
+          <p>Calculate precise speed from actual transferred bytes over exact timestamps.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Speed Guide -->
+    <section id="speed-guide" class="section">
+      <h2 class="section-title">Internet Speed Guide</h2>
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Measured Speed</th>
+              <th>Suitable Activities</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1–5 Mbps</td><td>Basic web browsing, email, and music streaming</td></tr>
+            <tr><td>5–25 Mbps</td><td>HD video streaming and single-person home offices</td></tr>
+            <tr><td>25–100 Mbps</td><td>Multiple devices streaming HD/4K and casual online gaming</td></tr>
+            <tr><td>100–300 Mbps</td><td>4K video streaming, online gaming, and large file downloads</td></tr>
+            <tr><td>300+ Mbps</td><td>Heavy multi-device usage, large file uploads, and home servers</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); text-align: center;">Actual requirements vary depending on the application, number of connected devices, video quality, and network conditions.</p>
+    </section>
+
+    <!-- FAQ Accordion -->
+    <section class="section">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <div class="accordion">
+        <div class="accordion-item">
+          <button class="accordion-header" aria-expanded="false" aria-controls="faq-1">
+            What is internet speed?
+            <span class="accordion-icon">▼</span>
+          </button>
+          <div id="faq-1" class="accordion-content">
+            Internet speed refers to the rate at which data travels from the internet to your device (download speed) or from your device to the internet (upload speed), measured in Megabits per second (Mbps).
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header" aria-expanded="false" aria-controls="faq-2">
+            Why is upload speed usually lower than download speed?
+            <span class="accordion-icon">▼</span>
+          </button>
+          <div id="faq-2" class="accordion-content">
+            Most internet service providers allocate more bandwidth to downloading because typical internet activities (like browsing and streaming) involve receiving significantly more data than sending it.
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header" aria-expanded="false" aria-controls="faq-3">
+            How accurate is a browser-based speed test?
+            <span class="accordion-icon">▼</span>
+          </button>
+          <div id="faq-3" class="accordion-content">
+            Browser-based tests measure real transferred bytes against exact high-resolution timers (performance.now()). However, browser overhead, background tabs, Wi-Fi interference, and active extensions can influence measurements.
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header" aria-expanded="false" aria-controls="faq-4">
+            Why did my speed test fail or block upload testing?
+            <span class="accordion-icon">▼</span>
+          </button>
+          <div id="faq-4" class="accordion-content">
+            Upload tests or general speed tests can fail if browser extensions (like ad blockers), firewalls, network proxies, or CORS restrictions block binary POST requests to foreign test servers.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer Ad Placeholder -->
+    <div class="ad-container" aria-label="Advertisement">ADVERTISEMENT</div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <h3>MP Speed Test</h3>
+          <p>Fast, simple and easy browser-based internet speed testing tool.</p>
+          <p style="margin-top: 0.5rem; font-size: 0.8rem; font-weight: 600;">A product of MP Digital Hub</p>
+        </div>
+
+        <div>
+          <div class="footer-links-title">Quick Links</div>
+          <ul class="footer-links">
+            <li><a href="index.html" class="footer-link">Home</a></li>
+            <li><a href="#speed-test" class="footer-link">Speed Test</a></li>
+            <li><a href="about.html" class="footer-link">About Us</a></li>
+            <li><a href="faq.html" class="footer-link">FAQ</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer-links-title">Legal & Contact</div>
+          <ul class="footer-links">
+            <li><a href="privacy.html" class="footer-link">Privacy Policy</a></li>
+            <li><a href="terms.html" class="footer-link">Terms & Conditions</a></li>
+            <li><a href="disclaimer.html" class="footer-link">Disclaimer</a></li>
+            <li><a href="contact.html" class="footer-link">Contact Us</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 MP Speed Test. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
